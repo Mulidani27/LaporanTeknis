@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pencarian Nama Wisata</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    .marker-label {
+      background-color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-md">
+
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+
+    <h1 class="text-3xl font-bold text-blue-700 mb-4">Pencarian Nama Wisata</h1>
+
+    <div class="text-gray-800 text-lg space-y-4 mb-6">
+      <p>Fitur <strong>pencarian nama wisata</strong> memungkinkan pengguna menemukan lokasi wisata berdasarkan <em>teks pencarian</em>. Nama lokasi akan difilter secara langsung saat pengguna mengetik di kolom input.</p>
+
+      <p><strong>Langkah-langkah kerjanya:</strong></p>
+      <ul class="list-decimal pl-6 space-y-1">
+        <li>User mengetik pada input <code>#searchInput</code>.</li>
+        <li>Sistem mencocokkan input dengan nama pada array <code>labelsNama</code>.</li>
+        <li>Hanya label yang cocok yang akan ditampilkan, sisanya disembunyikan.</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>// Event pencarian
+searchInput.addEventListener('input', () =&gt; {
+  const q = searchInput.value.toLowerCase();
+  labelsNama.forEach(item =&gt; {
+    const match = item.name.toLowerCase().includes(q);
+    item.label.getElement().style.display = match ? 'block' : 'none';
+  });
+});</code>
+      </pre>
+
+      <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
+        <p class="text-base"><strong>Catatan:</strong> Fitur ini hanya menyaring label nama wisata. Jika ingin menyembunyikan marker utama juga, tambahkan logika yang sama pada objek marker.</p>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <input id="searchInput" type="text" placeholder="Cari nama wisata..."
+             class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
+
+    <div id="map" class="w-full h-96 rounded-md border border-gray-300"></div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaTI3MDUiLCJhIjoiY2xsaXh4a3gyMTd6dTNlcW9sZjVnZ2J6bCJ9.ISKX1wgSzuCUbuyiDWiP9g';
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [114.5944, -3.3186],
+      zoom: 14
+    });
+
+    const wisataList = [
+      { nama: "Taman Siring", lng: 114.5915, lat: -3.3172 },
+      { nama: "Menara Pandang", lng: 114.5935, lat: -3.3185 },
+      { nama: "Masjid Raya Sabilal Muhtadin", lng: 114.5982, lat: -3.3220 }
+    ];
+
+    const labelsNama = [];
+
+    wisataList.forEach(data => {
+      const el = document.createElement('div');
+      el.className = 'w-4 h-4 bg-blue-600 rounded-full border-2 border-white';
+
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([data.lng, data.lat])
+        .addTo(map);
+
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'marker-label';
+      labelDiv.textContent = data.nama;
+
+      const label = new mapboxgl.Marker(labelDiv, { offset: [0, -30] })
+        .setLngLat([data.lng, data.lat])
+        .addTo(map);
+
+      labelsNama.push({ name: data.nama, label });
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.toLowerCase();
+      labelsNama.forEach(item => {
+        const match = item.name.toLowerCase().includes(q);
+        item.label.getElement().style.display = match ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

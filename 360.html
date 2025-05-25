@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panorama 360° Lokasi Wisata</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.pannellum.org/2.5/pannellum.css" />
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Panorama 360° Lokasi Wisata</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Fitur panorama 360° memberikan pengalaman visual yang interaktif dengan menampilkan lokasi wisata dari berbagai sudut pandang menggunakan teknologi <strong>Pannellum</strong>.</p>
+
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>Gambar panorama</strong> harus dalam format equirectangular.</li>
+        <li><strong>Tampilan otomatis</strong> langsung aktif saat halaman dimuat.</li>
+        <li><strong>Kontrol navigasi</strong> seperti zoom dan arah tersedia.</li>
+        <li><strong>Kompas</strong> ditampilkan untuk orientasi arah pengunjung.</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>// Inisialisasi viewer panorama
+pannellum.viewer('panorama', {
+  type: "equirectangular",
+  panorama: "Gambar/360.jpg",
+  autoLoad: true,
+  compass: true,
+  showControls: true,
+  preview: "Gambar/360.jpg"
+});</code>
+      </pre>
+
+      <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
+        <p class="text-base"><strong>Catatan:</strong> Pastikan gambar panorama berada di folder <code class="bg-gray-200 px-1 rounded">Gambar/</code> dan dalam format 360 derajat (equirectangular).</p>
+      </div>
+
+      <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">Contoh Elemen HTML Viewer</h2>
+        <div class="border border-gray-300 rounded-md p-4 bg-gray-50">
+          <pre class="text-sm text-gray-800 overflow-x-auto"><code>&lt;div id="panorama" class="w-full h-96 rounded-md"&gt;&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">Hasil Tampilan</h2>
+        <div id="panorama" class="w-full h-96 rounded-md border border-gray-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pannellum JS -->
+  <script src="https://cdn.pannellum.org/2.5/pannellum.js"></script>
+  <script>
+    pannellum.viewer('panorama', {
+      type: "equirectangular",
+      panorama: "Gambar/360.jpg",
+      autoLoad: true,
+      compass: true,
+      showControls: true,
+      preview: "Gambar/360.jpg"
+    });
+  </script>
+</body>
+</html>

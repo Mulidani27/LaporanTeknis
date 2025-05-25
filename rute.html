@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Petunjuk Arah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+    
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Panel Petunjuk Arah</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Dengan menggunakan API <strong>Mapbox Directions</strong>, Anda dapat menampilkan rute dan petunjuk arah antara dua titik koordinat.</p>
+
+      <p>Langkah-langkah:</p>
+      <ul class="list-decimal pl-6 space-y-1">
+        <li>Gunakan API Directions Mapbox untuk permintaan rute antara titik awal dan akhir.</li>
+        <li>Ambil data rute dan konversikan ke format GeoJSON.</li>
+        <li>Tampilkan rute sebagai layer garis pada peta.</li>
+        <li>Ambil dan tampilkan petunjuk arah langkah demi langkah dalam elemen HTML.</li>
+        <li>Sediakan tombol kontrol untuk menampilkan/sembunyikan panel petunjuk arah.</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>function getRoute(start, end) {
+  const directionsRequest =
+    `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&language=id&access_token=${mapboxgl.accessToken}`;
+
+  fetch(directionsRequest)
+    .then(response => response.json())
+    .then(data => {
+      const route = data.routes[0].geometry.coordinates;
+      const geojson = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: route
+        }
+      };
+
+      if (map.getSource('route')) {
+        map.getSource('route').setData(geojson);
+      } else {
+        map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: {
+            type: 'geojson',
+            data: geojson
+          },
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#0000ff',
+            'line-width': 5,
+            'line-opacity': 1
+          }
+        });
+      }
+
+      const steps = data.routes[0].legs[0].steps;
+      const directionsList = document.getElementById('directionsList');
+      directionsList.innerHTML = '';
+      steps.forEach(step => {
+        const li = document.createElement('li');
+        li.textContent = step.maneuver.instruction;
+        directionsList.appendChild(li);
+      });
+
+      const directionsPanel = document.getElementById('directionsPanel');
+      directionsPanel.classList.remove('hidden');
+      directionsPanel.classList.add('block');
+
+      document.getElementById('toggleDirections').style.display = 'block';
+    });
+}</code>
+      </pre>
+
+      <div id="map" class="w-full h-96 rounded border border-gray-300 mb-4"></div>
+
+      <button id="toggleDirections" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-2 hidden" onclick="togglePanel()">Tampilkan/Sembunyikan Petunjuk</button>
+      <div id="directionsPanel" class="hidden p-4 bg-gray-100 rounded border border-gray-300">
+        <h2 class="text-xl font-semibold mb-2">Petunjuk Arah:</h2>
+        <ol id="directionsList" class="list-decimal pl-4 space-y-1 text-sm"></ol>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaTI3MDUiLCJhIjoiY2xsaXh4a3gyMTd6dTNlcW9sZjVnZ2J6bCJ9.ISKX1wgSzuCUbuyiDWiP9g'; // Ganti token bila perlu
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [114.5944, -3.3186],
+      zoom: 14
+    });
+
+    // Titik awal dan akhir
+    const start = [114.5915, -3.3172]; // Taman Siring
+    const end = [114.6035, -3.3205];   // Lokasi tujuan simulasi
+
+    // Tambahkan marker awal dan akhir
+    new mapboxgl.Marker({ color: 'green' }).setLngLat(start).addTo(map);
+    new mapboxgl.Marker({ color: 'red' }).setLngLat(end).addTo(map);
+
+    function getRoute(start, end) {
+      const directionsRequest = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&language=id&access_token=${mapboxgl.accessToken}`;
+
+      fetch(directionsRequest)
+        .then(response => response.json())
+        .then(data => {
+          const route = data.routes[0].geometry.coordinates;
+          const geojson = {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: route
+            }
+          };
+
+          if (map.getSource('route')) {
+            map.getSource('route').setData(geojson);
+          } else {
+            map.addSource('route', {
+              type: 'geojson',
+              data: geojson
+            });
+
+            map.addLayer({
+              id: 'route',
+              type: 'line',
+              source: 'route',
+              layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+              },
+              paint: {
+                'line-color': '#1D4ED8',
+                'line-width': 5,
+                'line-opacity': 0.8
+              }
+            });
+          }
+
+          // Tampilkan instruksi arah
+          const steps = data.routes[0].legs[0].steps;
+          const directionsList = document.getElementById('directionsList');
+          directionsList.innerHTML = '';
+          steps.forEach(step => {
+            const li = document.createElement('li');
+            li.textContent = step.maneuver.instruction;
+            directionsList.appendChild(li);
+          });
+
+          // Tampilkan panel dan tombol
+          const directionsPanel = document.getElementById('directionsPanel');
+          directionsPanel.classList.remove('hidden');
+          directionsPanel.classList.add('block');
+
+          const toggleButton = document.getElementById('toggleDirections');
+          toggleButton.style.display = 'block';
+        });
+    }
+
+    // Panggil fungsi rute
+    getRoute(start, end);
+
+    // Event tombol toggle
+    document.getElementById('toggleDirections').addEventListener('click', () => {
+      const panel = document.getElementById('directionsPanel');
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        panel.classList.add('block');
+      } else {
+        panel.classList.remove('block');
+        panel.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

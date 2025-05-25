@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mengambil Data Cuaca</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Mengambil Data Cuaca</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Setelah Anda memiliki <strong>API Key</strong> dari OpenWeatherMap, Anda dapat mengambil data cuaca menggunakan JavaScript dengan <code>fetch()</code>. Data akan dikembalikan dalam format <strong>JSON</strong> dan bisa ditampilkan ke UI.</p>
+
+      <p><strong>Langkah-langkah mengambil data cuaca:</strong></p>
+      <ul class="list-decimal pl-6 space-y-1">
+        <li>Tentukan koordinat lintang dan bujur lokasi wisata.</li>
+        <li>Buat URL API dengan menyisipkan API Key dan koordinat.</li>
+        <li>Gunakan fungsi <code>fetch()</code> untuk memanggil API.</li>
+        <li>Ambil dan tampilkan data dari respon JSON.</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>// Ganti dengan API Key OpenWeatherMap Anda
+const apiKey = 'your-api-key';
+const latitude = -3.3178;
+const longitude = 115.3213;
+
+const url = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric&lang=id`;
+
+fetch(url)
+  .then(response =&gt; response.json())
+  .then(data =&gt; {
+    const weather = data.weather[0].description;
+    const temperature = data.main.temp;
+    const humidity = data.main.humidity;
+    const windSpeed = data.wind.speed;
+
+    console.log(`Cuaca: ${weather}`);
+    console.log(`Suhu: ${temperature}°C`);
+    console.log(`Kelembapan: ${humidity}%`);
+    console.log(`Kecepatan Angin: ${windSpeed} m/s`);
+  })
+  .catch(error =&gt; console.error('Error:', error));</code>
+      </pre>
+
+      <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded">
+        <p class="text-base"><strong>Catatan:</strong> Gunakan protokol <code>https</code> jika Anda menjalankan aplikasi dari server HTTPS agar tidak terjadi blokir konten campuran oleh browser.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

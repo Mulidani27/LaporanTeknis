@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kontrol Zoom Peta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    #zoomRange {
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-md">
+    
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Kontrol Zoom Peta</h1>
+
+    <div class="mb-6 text-gray-800 space-y-4 text-lg">
+      <p>Fitur ini memungkinkan pengguna mengatur tingkat zoom peta dengan dua kontrol:</p>
+      <ul class="list-decimal pl-6 space-y-2">
+        <li><code>input range</code> (slider) yang dapat digeser untuk mengubah zoom.</li>
+        <li><code>input number</code> yang dapat diisi langsung untuk mengatur zoom secara presisi.</li>
+      </ul>
+      <p>Kedua kontrol ini saling <strong>sinkron</strong>, sehingga perubahan di salah satu langsung mengupdate yang lain dan peta.</p>
+      
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>zoomRange.addEventListener('input', () =&gt; map.setZoom(Number(zoomRange.value)));
+zoomNumber.addEventListener('change', () =&gt; map.setZoom(Number(zoomNumber.value)));
+map.on('zoom', () =&gt; {
+  zoomRange.value = map.getZoom().toFixed(2);
+  zoomNumber.value = map.getZoom().toFixed(2);
+});</code>
+      </pre>
+    </div>
+
+    <label for="zoomRange" class="block font-semibold mb-1">Zoom Slider</label>
+    <input type="range" id="zoomRange" min="0" max="22" step="0.1" class="mb-4">
+
+    <label for="zoomNumber" class="block font-semibold mb-1">Zoom Number</label>
+    <input type="number" id="zoomNumber" min="0" max="22" step="0.1" class="border rounded p-2 w-24">
+
+    <div id="map" class="w-full h-96 mt-6 rounded-md border border-gray-300"></div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaTI3MDUiLCJhIjoiY2xsaXh4a3gyMTd6dTNlcW9sZjVnZ2J6bCJ9.ISKX1wgSzuCUbuyiDWiP9g';
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [114.5944, -3.3186],
+      zoom: 14
+    });
+
+    const zoomRange = document.getElementById('zoomRange');
+    const zoomNumber = document.getElementById('zoomNumber');
+
+    // Set default nilai input sesuai zoom awal peta
+    map.on('load', () => {
+      zoomRange.value = map.getZoom().toFixed(2);
+      zoomNumber.value = map.getZoom().toFixed(2);
+    });
+
+    // Event ketika slider digeser
+    zoomRange.addEventListener('input', () => {
+      map.setZoom(Number(zoomRange.value));
+    });
+
+    // Event ketika input number diubah
+    zoomNumber.addEventListener('change', () => {
+      let val = Number(zoomNumber.value);
+      if (val < 0) val = 0;
+      if (val > 22) val = 22;
+      map.setZoom(val);
+    });
+
+    // Sinkronisasi saat peta di-zoom manual (scroll, pinch)
+    map.on('zoom', () => {
+      zoomRange.value = map.getZoom().toFixed(2);
+      zoomNumber.value = map.getZoom().toFixed(2);
+    });
+  </script>
+</body>
+</html>

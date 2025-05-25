@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>API Key OpenWeatherMap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-3xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Mendaftar untuk Mendapatkan API Key</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Untuk dapat menggunakan layanan data cuaca dari <strong>OpenWeatherMap</strong>, Anda harus memiliki <strong>API Key</strong> yang digunakan sebagai identifikasi akses ke server mereka.</p>
+
+      <p><strong>Langkah-langkah pendaftaran:</strong></p>
+      <ul class="list-decimal pl-6 space-y-1">
+        <li>Kunjungi situs resmi <a href="https://openweathermap.org/" target="_blank" class="text-blue-600 underline">https://openweathermap.org/</a>.</li>
+        <li>Klik tombol <em>Sign Up</em> dan buat akun baru dengan mengisi formulir yang disediakan.</li>
+        <li>Setelah berhasil mendaftar dan login, buka halaman <strong>API Keys</strong> dari dashboard akun Anda.</li>
+        <li>Salin API Key yang telah dibuat. API Key ini akan digunakan untuk semua permintaan data cuaca dari aplikasi Anda.</li>
+      </ul>
+
+      <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded">
+        <p class="text-base"><strong>Catatan:</strong> Jangan membagikan API Key Anda secara publik. Perlakukan seperti password agar tidak disalahgunakan oleh pihak lain.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

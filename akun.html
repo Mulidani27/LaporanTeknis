@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pembuatan Akun dan Token Mapbox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+    
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Pembuatan Akun dan Mendapatkan Token </h1>
+    
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Langkah-langkah berikut akan membimbing Anda untuk membuat akun dan mendapatkan token dari layanan <strong>Mapbox</strong>.</p>
+
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>
+          <strong>Buka Situs Resmi Mapbox</strong><br>
+          Kunjungi:
+          <a href="https://account.mapbox.com" class="text-blue-600 underline" target="_blank">https://account.mapbox.com</a>
+        </li>
+
+        <li>
+          <strong>Lakukan Registrasi</strong><br>
+          Daftarkan akun menggunakan email aktif pada halaman login seperti berikut:
+          <div class="flex justify-center">
+            <img src="Gambar/Pendaftaran.png" alt="Halaman Pendaftaran Mapbox"
+                 class="max-w-md w-full h-auto mt-2 rounded-lg shadow object-contain" />
+          </div>
+          <p class="text-sm italic text-center">Gambar 1: Halaman Pendaftaran Mapbox</p>
+        </li>
+
+        <li>
+          <strong>Masuk ke Akun Anda</strong><br>
+          Setelah berhasil login, Anda akan diarahkan ke dashboard utama.
+        </li>
+
+        <li>
+          <strong>Buka Menu Access Tokens</strong><br>
+          Pilih menu <span class="font-semibold">Access Tokens</span> dari panel kiri.
+        </li>
+
+        <li>
+          <strong>Gunakan atau Buat Token Baru</strong><br>
+          - Gunakan token default yang sudah tersedia<br>
+          - Atau klik <em>"Create a token"</em> untuk membuat token baru dengan hak akses terbatas<br>
+          <div class="flex justify-center">
+            <img src="Gambar/token.png" alt="Halaman Access Tokens Mapbox"
+                class="max-w-md w-full h-auto mt-2 rounded-lg shadow object-contain" />
+          </div>
+          <p class="text-sm italic text-center">Gambar 2: Menu Access Tokens pada Mapbox</p>
+        </li>
+      </ol>
+
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded mt-6">
+        <p class="font-semibold">Catatan Keamanan:</p>
+        <ul class="list-disc pl-5 text-base mt-2">
+          <li>Jangan bagikan token Anda secara publik.</li>
+          <li>Gunakan token dengan hak akses minimum yang diperlukan.</li>
+          <li>Simpan token Anda di tempat yang aman.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
