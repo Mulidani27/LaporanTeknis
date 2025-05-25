@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Popup Informasi Wisata</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+    
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Popup Informasi Kustom untuk Marker</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Untuk memberikan informasi lebih lengkap tentang suatu lokasi wisata, kita dapat menambahkan <strong>popup</strong> berisi HTML yang mencakup:</p>
+      <ul class="list-disc pl-6">
+        <li>Judul (nama wisata)</li>
+        <li>Gambar</li>
+        <li>Deskripsi singkat</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>marker.setPopup(new mapboxgl.Popup()
+  .setHTML(`
+    &lt;h3&gt;${namaWisata}&lt;/h3&gt;
+    &lt;img src="${urlGambar}" width="100%" /&gt;
+    &lt;p&gt;${deskripsiSingkat}&lt;/p&gt;
+  `)
+);</code>
+      </pre>
+
+      <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">Contoh Implementasi</h2>
+        <div id="map" class="w-full h-96 rounded-md border border-gray-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaTI3MDUiLCJhIjoiY2xsaXh4a3gyMTd6dTNlcW9sZjVnZ2J6bCJ9.ISKX1wgSzuCUbuyiDWiP9g'; // Ganti dengan token Anda
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [114.5944, -3.3186],
+      zoom: 14
+    });
+
+    const dataWisata = [
+      {
+        nama: "Taman Siring",
+        deskripsi: "Ruang terbuka hijau di tepi sungai Martapura.",
+        gambar: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Siring_Banjarmasin.jpg/320px-Siring_Banjarmasin.jpg",
+        lng: 114.5915,
+        lat: -3.3172
+      },
+      {
+        nama: "Pasar Terapung",
+        deskripsi: "Pasar tradisional di atas perahu.",
+        gambar: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Pasar_Terapung_Lok_Baintan.jpg/320px-Pasar_Terapung_Lok_Baintan.jpg",
+        lng: 114.5930,
+        lat: -3.3180
+      }
+    ];
+
+    dataWisata.forEach((wisata) => {
+      const el = document.createElement('div');
+      el.className = 'w-5 h-5 bg-red-600 rounded-full border-2 border-white';
+
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([wisata.lng, wisata.lat])
+        .addTo(map);
+
+      marker.setPopup(new mapboxgl.Popup()
+        .setHTML(`
+          <h3 class="text-lg font-bold mb-1">${wisata.nama}</h3>
+          <img src="${wisata.gambar}" class="rounded-md mb-2" />
+          <p class="text-sm text-gray-700">${wisata.deskripsi}</p>
+        `)
+      );
+    });
+  </script>
+</body>
+</html>

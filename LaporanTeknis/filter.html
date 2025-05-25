@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Filter Berdasarkan Kategori Wisata</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+    
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Filter Berdasarkan Kategori Wisata</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Dengan fitur ini, pengguna dapat menyaring tampilan marker pada peta berdasarkan kategori wisata seperti <strong>taman</strong>, <strong>kuliner</strong>, atau <strong>sejarah</strong>. Setiap kategori memiliki marker dan label tersendiri.</p>
+
+      <p>Langkah-langkah:</p>
+      <ul class="list-decimal pl-6 space-y-1">
+        <li>Siapkan array <code>markers</code> dan <code>labelsNama</code> yang berisi data marker dan label.</li>
+        <li>Buat tombol filter dengan atribut <code>data-category</code>.</li>
+        <li>Buat fungsi <code>filterMarkers(category)</code> untuk menampilkan atau menyembunyikan marker dan label berdasarkan kategori.</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>function filterMarkers(category) {
+  markers.forEach((item, i) => {
+    if (item.category === category || category === 'all') {
+      item.marker.addTo(map);
+      labelsNama[i].label.addTo(map);
+    } else {
+      item.marker.remove();
+      labelsNama[i].label.remove();
+    }
+  });
+}
+
+document.querySelectorAll('.btn-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterMarkers(btn.dataset.category);
+  });
+});</code>
+      </pre>
+
+      <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded">
+        <p class="text-base"><strong>Tips:</strong> Tambahkan tombol dengan kategori sesuai data yang Anda miliki dan gunakan class Tailwind agar tampilan lebih menarik.</p>
+      </div>
+
+      <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">Contoh Implementasi</h2>
+        <div class="flex gap-2 mb-4">
+          <button class="btn-filter bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded" data-category="all">Semua</button>
+          <button class="btn-filter bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded" data-category="taman">Taman</button>
+          <button class="btn-filter bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded" data-category="kuliner">Kuliner</button>
+          <button class="btn-filter bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded" data-category="sejarah">Sejarah</button>
+        </div>
+
+        <div id="map" class="w-full h-96 rounded-md border border-gray-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaTI3MDUiLCJhIjoiY2xsaXh4a3gyMTd6dTNlcW9sZjVnZ2J6bCJ9.ISKX1wgSzuCUbuyiDWiP9g';
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [114.5944, -3.3186],
+      zoom: 14
+    });
+
+    const markers = [];
+    const labelsNama = [];
+
+    const dataLokasi = [
+      { lng: 114.5915, lat: -3.3172, jenis: 'taman', nama: 'Taman Siring' },
+      { lng: 114.5930, lat: -3.3180, jenis: 'kuliner', nama: 'Warung Soto' },
+      { lng: 114.5950, lat: -3.3190, jenis: 'sejarah', nama: 'Museum Wasaka' }
+    ];
+
+    function createCustomMarker(jenis) {
+      const el = document.createElement('div');
+      el.className = 'w-6 h-6 rounded-full';
+      if (jenis === 'taman') {
+        el.classList.add('bg-green-500', 'border', 'border-white');
+      } else if (jenis === 'kuliner') {
+        el.classList.add('bg-red-500', 'border', 'border-white');
+      } else if (jenis === 'sejarah') {
+        el.classList.add('bg-yellow-500', 'border', 'border-white');
+      } else {
+        el.classList.add('bg-gray-400', 'border', 'border-white');
+      }
+      return el;
+    }
+
+    dataLokasi.forEach((lokasi) => {
+      const el = createCustomMarker(lokasi.jenis);
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([lokasi.lng, lokasi.lat])
+        .addTo(map);
+
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'marker-label bg-white px-2 py-1 text-sm rounded shadow';
+      labelDiv.textContent = lokasi.nama;
+      const label = new mapboxgl.Marker(labelDiv, { offset: [0, -30] })
+        .setLngLat([lokasi.lng, lokasi.lat])
+        .addTo(map);
+
+      markers.push({ marker, category: lokasi.jenis });
+      labelsNama.push({ name: lokasi.nama, label });
+    });
+
+    function filterMarkers(category) {
+      markers.forEach((item, i) => {
+        if (item.category === category || category === 'all') {
+          item.marker.addTo(map);
+          labelsNama[i].label.addTo(map);
+        } else {
+          item.marker.remove();
+          labelsNama[i].label.remove();
+        }
+      });
+    }
+
+    document.querySelectorAll('.btn-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterMarkers(btn.dataset.category);
+      });
+    });
+  </script>
+</body>
+</html>

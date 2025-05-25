@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Label Marker Nama Wisata</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    .marker-label {
+      background-color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #1f2937; /* Tailwind gray-800 */
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+    
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Label Marker: Menampilkan Nama Wisata</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Untuk menampilkan <strong>nama wisata</strong> secara langsung di atas marker, kita dapat menggunakan <code>&lt;div&gt;</code> berisi teks, lalu menggunakannya sebagai marker tambahan dengan posisi offset.</p>
+
+      <p><strong>Langkah-langkah:</strong></p>
+      <ul class="list-decimal pl-6 space-y-1">
+        <li>Membuat <code>&lt;div&gt;</code> berisi nama tempat wisata.</li>
+        <li>Memberi class dan style agar tampak seperti label.</li>
+        <li>Menambahkan ke peta sebagai marker baru dengan offset ke atas.</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>const labelDiv = document.createElement('div');
+labelDiv.className = 'marker-label';
+labelDiv.textContent = namaWisata;
+
+const label = new mapboxgl.Marker(labelDiv, { offset: [0, -30] })
+  .setLngLat([lng, lat])
+  .addTo(map);
+
+labelsNama.push({ name: namaWisata, label });</code>
+      </pre>
+
+      <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">Contoh Implementasi</h2>
+        <div id="map" class="w-full h-96 rounded-md border border-gray-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaTI3MDUiLCJhIjoiY2xsaXh4a3gyMTd6dTNlcW9sZjVnZ2J6bCJ9.ISKX1wgSzuCUbuyiDWiP9g'; // Ganti dengan token Anda
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [114.5944, -3.3186],
+      zoom: 14
+    });
+
+    const labelsNama = [];
+
+    const dataLokasi = [
+      { lng: 114.5915, lat: -3.3172, nama: 'Taman Siring' },
+      { lng: 114.5930, lat: -3.3180, nama: 'Pasar Terapung' },
+      { lng: 114.5950, lat: -3.3190, nama: 'Museum Wasaka' }
+    ];
+
+    dataLokasi.forEach((lokasi) => {
+      // Marker utama
+      const el = document.createElement('div');
+      el.className = 'w-4 h-4 rounded-full bg-blue-500 border-2 border-white';
+      new mapboxgl.Marker(el)
+        .setLngLat([lokasi.lng, lokasi.lat])
+        .addTo(map);
+
+      // Label nama wisata
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'marker-label';
+      labelDiv.textContent = lokasi.nama;
+
+      const label = new mapboxgl.Marker(labelDiv, { offset: [0, -30] })
+        .setLngLat([lokasi.lng, lokasi.lat])
+        .addTo(map);
+
+      labelsNama.push({ name: lokasi.nama, label });
+    });
+  </script>
+</body>
+</html>

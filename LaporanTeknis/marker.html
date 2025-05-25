@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Penambahan Marker Lokasi Wisata</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-md mt-10 rounded-xl">
+    
+    <!-- Tombol Kembali -->
+    <button 
+      onclick="history.back()" 
+      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      &larr; Kembali
+    </button>
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Penambahan Marker Lokasi Wisata</h1>
+
+    <div class="space-y-4 text-gray-800 text-lg">
+      <p>Untuk menandai lokasi wisata pada peta, Anda dapat menggunakan <strong>marker</strong> yang dapat dikustomisasi. Setiap marker dapat berisi:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Nama lokasi</li>
+        <li>Deskripsi singkat</li>
+        <li>Koordinat (longitude, latitude)</li>
+        <li>Popup informasi (dapat berisi gambar atau HTML lainnya)</li>
+      </ul>
+
+      <pre class="bg-gray-800 text-green-200 text-sm p-4 rounded-md overflow-auto">
+<code>new mapboxgl.Marker()
+  .setLngLat([114.5915, -3.3172])
+  .setPopup(
+    new mapboxgl.Popup().setHTML(
+      "&lt;b&gt;Taman Siring&lt;/b&gt;&lt;br&gt;Tempat wisata di Banjarmasin."
+    )
+  )
+  .addTo(map);</code>
+      </pre>
+
+      <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
+        <p class="text-base"><strong>Tips:</strong> Anda dapat menambahkan elemen HTML ke dalam popup seperti gambar, link, atau elemen lainnya sesuai kebutuhan.</p>
+      </div>
+
+      <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">Contoh Elemen HTML Peta</h2>
+        <div class="border border-gray-300 rounded-md p-4 bg-gray-50">
+          <pre class="text-sm text-gray-800 overflow-x-auto"><code>&lt;div id="map" class="w-full h-96"&gt;&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-2">Hasil Tampilan</h2>
+        <div id="map" class="w-full h-96 rounded-md border border-gray-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaTI3MDUiLCJhIjoiY2xsaXh4a3gyMTd6dTNlcW9sZjVnZ2J6bCJ9.ISKX1wgSzuCUbuyiDWiP9g'; // Ganti dengan token Anda
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [114.5944, -3.3186], // Koordinat pusat (Banjarmasin)
+      zoom: 12
+    });
+
+    // Tambahkan marker lokasi wisata
+    new mapboxgl.Marker()
+      .setLngLat([114.5915, -3.3172])
+      .setPopup(
+        new mapboxgl.Popup().setHTML(
+          "<b>Taman Siring</b><br>Tempat wisata di Banjarmasin."
+        )
+      )
+      .addTo(map);
+  </script>
+</body>
+</html>
